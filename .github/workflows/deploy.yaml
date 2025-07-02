@@ -51,8 +51,8 @@ jobs:
       # 5. Define image URIs
       - name: Set image names
         run: |
-          echo "FRONT_IMAGE=662195598891.dkr.ecr.eu-north-1.amazonaws.com/${{ env.FRONT_IMAGE_NAME }}:alejandro-${{ github.run_id }}" >> $GITHUB_ENV
-          echo "BACK_IMAGE=662195598891.dkr.ecr.eu-north-1.amazonaws.com/${{ env.BACK_IMAGE_NAME }}:alejandro-${{ github.run_id }}" >> $GITHUB_ENV
+          echo "FRONT_IMAGE=662195598891.dkr.ecr.eu-north-1.amazonaws.com/${{ env.FRONT_IMAGE_NAME }}:alejandro-${{ github.run_number }}" >> $GITHUB_ENV
+          echo "BACK_IMAGE=662195598891.dkr.ecr.eu-north-1.amazonaws.com/${{ env.BACK_IMAGE_NAME }}:alejandro-${{ github.run_number }}" >> $GITHUB_ENV
 
       # 6. Build and push frontend image
       - name: Build and push frontend image
