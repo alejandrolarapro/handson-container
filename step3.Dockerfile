@@ -1,19 +1,29 @@
-FROM ???
+# Version ultra-minimaliste avec image distroless
+FROM node:18-alpine AS builder
 
-# on se place dans un dossier de travail et on y copie tout le code de l'application
-???
-???
+WORKDIR /app
+COPY frontend/package*.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+COPY frontend/ .
+RUN npm run build
 
-# on package l'application
-???
+# Stage intermédiaire pour obtenir un serveur HTTP statique minimal
+FROM alpine:latest AS server-builder
+RUN apk add --no-cache go git
+RUN go install github.com/static-web-server/static-web-server@latest
 
+# Image finale ultra-minimale avec distroless
+FROM gcr.io/distroless/static-debian11
 
-FROM ???
+# Copier le serveur HTTP statique
+COPY --from=server-builder /root/go/bin/static-web-server /server
 
-# port à exposer pour accéder à l'application
-???
+# Copier les fichiers buildés
+COPY --from=builder /app/dist /www
 
-# on récupère le résultat de notre conteneur de build
-COPY ??? ??? /usr/share/nginx/html
+# Exposer le port
+EXPOSE 8080
 
-CMD ["nginx", "-g", "daemon off;"]
+# Lancer le serveur
+ENTRYPOINT ["/server"]
+CMD ["--port", "8080", "--root", "/www", "--page404", "/www/index.html"]
