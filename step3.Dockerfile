@@ -26,4 +26,5 @@ EXPOSE 8080
 
 # Lancer le serveur
 ENTRYPOINT ["/server"]
+
 CMD ["--port", "8080", "--root", "/www", "--page404", "/www/index.html"]
